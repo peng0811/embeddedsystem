@@ -48,7 +48,6 @@ private:
         _button_service = new ButtonService(_ble, false /* initial value for button pressed */);
 
         _button.fall(Callback<void()>(this, &BatteryDemo::button_pressed));
-        _button.rise(Callback<void()>(this, &BatteryDemo::button_released));
 
         start_advertising();
     }
@@ -101,9 +100,6 @@ private:
         _event_queue.call(Callback<void(char)>(_button_service, &ButtonService::updateButtonState), 1);
     }
 
-    void button_released(void) {
-        _event_queue.call(Callback<void(char)>(_button_service, &ButtonService::updateButtonState), 1);
-    }
 
     void blink(void) {
         _led1 = !_led1;
