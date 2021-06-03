@@ -1,0 +1,77 @@
+<!-- ref: https://github.com/dannyvai/plotly_websocket_example -->
+<html>
+
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<script>
+
+    ws = new WebSocket("ws://127.0.0.1:5050")
+    var request_data_interval
+
+    var dps_x = [];
+    var dataLength = 20;
+    var chart
+
+
+
+    ws.onopen = function()
+    {
+        // Web Socket is connected, send data using send()
+        ws.send("Message to send");
+        chart = new CanvasJS.Chart("chartContainer", {
+            title :{ text: "temperture detect system" },
+            axisX: { title: "time (s)"},
+            axisY: { title: "Distance (mm)", includeZero: false },
+            data: [{
+                type: "spline",
+                name: "x",
+                //showInLegend: true,
+                dataPoints: dps_x
+            }]
+        });
+        request_data_interval = window.setInterval(requestData, 50);
+
+    };
+
+
+
+
+
+    var dps_x = [];
+    var dataLength = 20;
+
+    ws.onmessage = function (evt)
+    {
+        var received_msg = evt.data;
+        data = JSON.parse(evt.data);
+
+        dps_x.push({x: data.time, y: data.val})
+        if (dps_x.length > dataLength) {
+            dps_x.shift();
+
+        }
+
+
+        chart.render();
+    };
+
+ws.onclose = function()
+    {
+      // websocket is closed.
+      window.clearInterval(request_data_interval)
+    };
+
+    function requestData()
+    {
+        ws.send("get-data");
+    }
+
+
+</script>
+<body>
+
+
+<div id="chartContainer" style="height: 370px; max-width: 920px; margin: 0px auto;"></div>
+<div id="image"></div>
+</body>
+</html>
