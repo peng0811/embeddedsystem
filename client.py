@@ -97,6 +97,7 @@ try:
     #t1 = threading.Thread(target=data_rec)
     #t1.start()
 
+	
     start_server = websockets.serve(web_socket,"127.0.0.1",5050)
     asyncio.get_event_loop().run_until_complete(start_server)
     asyncio.get_event_loop().run_forever()
