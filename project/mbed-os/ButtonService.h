@@ -31,15 +31,11 @@ public:
     }
     char temp[2];
 
-    void updateButtonState(char newState) {
-        float t = getTempC_Obj1(0x5A);
-        int a = t;
-        int b =t*10-a*10;
-        temp[0] = t;
-        temp[1] = b;
-        ble.gattServer().write(buttonState.getValueHandle(), (uint8_t *)&temp[0], sizeof(char));
-        //wait(2);
-        //ble.gattServer().write(buttonState.getValueHandle(), (uint8_t *)&temp[1], sizeof(char));
+   void updateButtonState(char newState) {
+        floatdata.t = getTempC_Obj1(0x5A);
+        floatdata.t = floatdata.t*10-256;
+        char T = floatdata.t;
+        ble.gattServer().write(buttonState.getValueHandle(), (uint8_t *)&T, sizeof(char));
     }
 
 private:
