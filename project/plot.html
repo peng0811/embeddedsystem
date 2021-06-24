@@ -1,0 +1,162 @@
+﻿<!-- ref: https://github.com/dannyvai/plotly_websocket_example -->
+<html>
+<head>
+	<meta charset="UTF-8">
+	</head>
+	<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+	<script>
+
+		ws = new WebSocket("ws://127.0.0.1:5050")
+		var request_data_interval
+
+		var dps_x = [];
+		var dataLength = 20;
+		var chart
+		var image1 = document.createElement('img');
+		image1.src = "fever.png";
+		var image2 = document.createElement('img');
+		image2.src = "normal.png";
+		var image3 = document.createElement('img');
+		image3.src = "far.png";
+		var Con=0;
+		var ID;
+		
+		ws.onopen = function()
+		{
+			ws.send(1);
+			chart = new CanvasJS.Chart("chartContainer", {
+				title :{ text: "temperature detect system" },
+				axisX: { title: "time (s)"},
+				axisY: { title: "Temperature (C)", includeZero: false },
+				data: [{
+					type: "spline",
+					name: "x",
+					dataPoints: dps_x
+				}]
+			});
+			//request_data_interval = window.setInterval(requestData, 50);
+		};
+
+		var fever
+		var far
+		var img_fever
+		var img_far
+		var img_normal
+		var dps_x = [];
+		var dataLength = 20;
+		var temp
+		var ID
+		function test(){
+			Con = 1;
+			ID = document.getElementById('name').value;
+			ws.send(ID);
+		}
+
+		ws.onmessage = function (evt)
+		{
+			if(Con){
+				var str = "你的體溫為"
+				var str2 = "R08"
+				var received_msg = evt.data;
+				data = JSON.parse(evt.data);
+				temp = data.val/10;	
+				if (temp > 37.5)
+				{
+					fever = true;
+					far = false;
+				}	
+				else if(temp > 35 && temp < 37.5)
+				{
+					fever = false;
+					far = false;
+				}
+				else{
+					fever = false;
+					far = true;
+				}
+		
+				if(far == false){
+					document.getElementById('string').textContent = "ID:"+ ID ;
+					document.getElementById('temp').innerHTML = str + temp + "度C";
+					dps_x.push({x: data.time, y: temp})
+					if (dps_x.length > dataLength) {
+						dps_x.shift();
+					}
+					Con = 0;
+				}else{
+					var string1 = "太遠了請靠近"
+					document.getElementById('string').textContent ="ID:"+ ID;
+					document.getElementById('temp').innerHTML = string1;
+				}
+
+				if(fever == true && far == false)
+				{
+					if(img_far == true)
+					{
+						document.getElementById('image').removeChild(image3);
+						img_far = false;
+					}
+					if(img_normal == true){
+						document.getElementById('image').removeChild(image2);
+						img_normal = false;
+					}
+					document.getElementById('image').appendChild(image1);
+					img_fever = true;
+				}
+
+				if(fever == false && far == false)
+				{
+					if(img_fever == true){
+						document.getElementById('image').removeChild(image1);
+						img_fever = false;
+					}
+					if(img_far == true){
+						document.getElementById('image').removeChild(image3);
+						img_far = false;
+					}
+					document.getElementById('image').appendChild(image2);
+					img_normal = true;
+				}
+				if(fever == false && far == true)
+				{
+					if(img_fever == true){
+						document.getElementById('image').removeChild(image1);
+						img_fever = false;
+					}
+					if(img_normal == true){
+						document.getElementById('image').removeChild(image2);
+						img_normal = false;
+					}
+					document.getElementById('image').appendChild(image3);
+					img_far = true;
+				}
+				chart.render();
+			}
+		};
+
+		ws.onclose = function()
+		{
+			window.clearInterval(request_data_interval)
+		};
+
+		function requestData()
+		{
+			ws.send("get-data");
+		}
+
+	</script>
+	<body>
+		<font size="10">	
+			<p id="title">請先輸入你的ID或感應卡片</p>
+			<input type='text' id='name' />
+ 			<input type='button' value='送出' onclick='test()'/>
+		</font>
+		<div id="chartContainer" style="height: 370px; max-width: 920px; margin: 0px auto;"></div>
+		<font size="10">
+			<div id="string" align="center" valign="center" style="height:100px; top:80px; position:relative"></div>
+			<div id="temp" align="center" valign="center" style="height:200px; top:80px; position:relative"></div>
+		</font>
+		<div id="image" align="center" style="height:600px;width:600px;margin:0px auto;"></div>
+	</body>
+</html>
