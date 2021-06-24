@@ -29,7 +29,10 @@ public:
         GattService         buttonService(ButtonService::BUTTON_SERVICE_UUID, charTable, sizeof(charTable) / sizeof(GattCharacteristic *));
         ble.gattServer().addService(buttonService);
     }
-    char temp[2];
+    union dataspace{
+        unsigned char q[4];
+        float t;
+    }floatdata;
 
    void updateButtonState(char newState) {
         floatdata.t = getTempC_Obj1(0x5A);
