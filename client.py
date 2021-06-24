@@ -26,22 +26,25 @@ scanner = Scanner().withDelegate(ScanDelegate())
 devices = scanner.scan(10.0)
 num=0
 run = True
-print("s")
 async def web_socket(websocket,path):
     global num
     global data
     global times
     times = 0
     while(run):
-        #num = randint(360,390)
-        #num = num/10
-        data_rec()
-        times += 1
-        print(times)
-        data= "{\"val\":%d , \"time\":%d}" % (num,times)
-        #data = "{\"time\":%d}" % (times)
-        time.sleep(1)
-        await websocket.send(data)
+        print ("請輸入ID:")
+        ID=input()
+        sheet.cell(row=idx,column=1,value=ID)
+        while 1:
+            data_rec()
+            if num >=350:
+                times += 1
+            print(times)
+            data= "{\"val\":%d , \"time\":%d}" % (num,times)
+            time.sleep(1)
+            await websocket.send(data)
+            if num >=350:
+                break
     
 
 n=0
@@ -82,24 +85,14 @@ try:
             global ID
             global idx
             if (ch.supportsRead()):
-                print ("請輸入ID:")
-                ID=input()
-                sheet.cell(row=idx,column=1,value=ID)
-                while 1:
-                    c = ch.read()
-                    time.sleep(2)
-                    if (c[0]<=35 or c[0] >=40)and k:
-                        print ("請靠近點")
-                        time.sleep(1)
-                    if c[0] >= 35:
-                        num =(int(c[0])+256)/10
-                        print(num)
-                        sheet.cell(row=idx,column=2,value=num)
-                        wb.save('data3.xlsx')
-                        idx = idx + 1
-                        num=num*10
-                        time.sleep(0.5)
-                        break
+                c = ch.read()
+                num =(int(c[0])+256)/10
+                print(num)
+                sheet.cell(row=idx,column=2,value=num)
+                wb.save('data3.xlsx')
+                idx = idx + 1
+                num=num*10
+                time.sleep(0.5)
 
     #t1 = threading.Thread(target=data_rec)
     #t1.start()
