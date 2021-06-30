@@ -2,7 +2,7 @@
 ===
 Development environment
 ---
-1.Mbed studio<br>
+1.Mbed studio(mbed-os 5.14)<br>
 2.python3<br>
 3.mongodb<br>
 4.Ubuntu 18.04
