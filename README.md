@@ -15,3 +15,11 @@ Step 3. add mlx90614 file<br>
 Step 4. run client.py and connect bluetooth with STM32 board<br>
 Step 5. run plot.html to get temperature from Forehead and ID<br>
 Step 6. run mongodb_create.py to build a database<br>
+
+Demo
+---
+資料庫 demo:<br>
+https://www.youtube.com/watch?v=WdTDAXwZ7KM<br>
+藍芽傳輸&量測溫度 demo:<br>
+https://www.youtube.com/watch?v=csd1VBX6LFY<br>
+https://www.youtube.com/watch?v=ZkXifBKbqXs<br>
