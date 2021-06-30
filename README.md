@@ -13,8 +13,9 @@ Step 1. git clone https://os.mbed.com/teams/mbed-os-examples/code/mbed-os-exampl
 Step 2. modify ButtonService.h and main.cpp<br>
 Step 3. add mlx90614 file<br>
 Step 4. run client.py to connect bluetooth with STM32 board and get data from STM32<br>
-Step 5. run plot.html to get data crom client.py and show temperature and ID<br>
-Step 6. run mongodb_create.py to build a database<br>
+Step 5. run mongodb_create.py to build a database<br>
+Step 6. run plot.html to get data crom client.py and show temperature and ID<br>
+
 
 Demo
 ---
