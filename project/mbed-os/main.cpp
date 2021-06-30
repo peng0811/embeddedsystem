@@ -29,10 +29,9 @@ public:
         _ble.init(this, &BatteryDemo::on_init_complete);
 
         _event_queue.call_every(500, this, &BatteryDemo::blink);
-
+        _event_queue.call_every(500, this, &BatteryDemo::button_pressed);
         _event_queue.dispatch_forever();
     }
-
 private:
     /** Callback triggered when the ble initialization process has finished */
     void on_init_complete(BLE::InitializationCompleteCallbackContext *params) {
