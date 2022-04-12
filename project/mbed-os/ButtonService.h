@@ -29,14 +29,14 @@ public:
         GattService         buttonService(ButtonService::BUTTON_SERVICE_UUID, charTable, sizeof(charTable) / sizeof(GattCharacteristic *));
         ble.gattServer().addService(buttonService);
     }
+
     union dataspace{
         unsigned char q[4];
         float t;
     }floatdata;
-
    void updateButtonState(char newState) {
-        floatdata.t = getTempC_Obj1(0x5A);
-        floatdata.t = floatdata.t*10-256;
+        floatdata.t = getTempC_Obj1(0x5A);//取得溫度
+        floatdata.t = floatdata.t*10-256; //乘10取浮點數第一位，減掉256讓數值在0-255之間
         char T = floatdata.t;
         ble.gattServer().write(buttonState.getValueHandle(), (uint8_t *)&T, sizeof(char));
     }

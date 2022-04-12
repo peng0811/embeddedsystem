@@ -25,12 +25,12 @@ public:
     float temp[2]={50,60};
     void start() {
         _ble.gap().setEventHandler(this);
-
         _ble.init(this, &BatteryDemo::on_init_complete);
-
-        _event_queue.call_every(500, this, &BatteryDemo::blink);
+        //透過上面兩行與電腦藍芽連接
         _event_queue.call_every(500, this, &BatteryDemo::button_pressed);
+        //透過排程器將任務排進queue等待
         _event_queue.dispatch_forever();
+        //dispatch_forever只要有任務就直接挑出來執行，FIFO
     }
 private:
     /** Callback triggered when the ble initialization process has finished */
