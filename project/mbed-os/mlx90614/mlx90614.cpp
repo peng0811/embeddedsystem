@@ -127,21 +127,21 @@ float getTempC_Ambi(uint8_t SAddr)
 
 float getTempC_Obj1(uint8_t SAddr)
 {
-    char cmd[3] = { 0 };
-    uint8_t crcbuf[6] = { 0 };
-    uint8_t writeAddr, readAddr;
+    char cmd[3] = { 0 };         //cmd 接收和傳送用的buffer
+    uint8_t crcbuf[6] = { 0 };   //crcbuff 計算CRC用
+    uint8_t writeAddr, readAddr; //MLX90614的位址
     
-    writeAddr = (SAddr << 1) + 0;
-    readAddr = (SAddr << 1) + 1;
+    writeAddr = (SAddr << 1) + 0;//位址7bit + 讀入1bit
+    readAddr = (SAddr << 1) + 1; //位址7bit + 寫入1bit
     
-    crcbuf[0] = writeAddr;       //write Address
-    crcbuf[1] = cmd[0] = OPCODE_RAM | RAM_TOBJ1;
-    crcbuf[2] = readAddr;       //read Address
+    crcbuf[0] = writeAddr;       //write Address 
+    crcbuf[1] = cmd[0] = OPCODE_RAM | RAM_TOBJ1;//我要作的操作|我要的數據儲存的位址
+    crcbuf[2] = readAddr;        //read Address
 
-    MLX90614_I2C.write(writeAddr, cmd, 1, true);
-    MLX90614_I2C.read(readAddr, cmd, 3);
+    MLX90614_I2C.write(writeAddr, cmd, 1, true);//告知MLX90614我要做的事情
+    MLX90614_I2C.read(readAddr, cmd, 3);//讀取MLX90614傳回來的數據
     
-    for (uint8_t cnt = 0; cnt < 3; cnt++) crcbuf[cnt+3] = (uint8_t)cmd[cnt];
+    for (uint8_t cnt = 0; cnt < 3; cnt++) crcbuf[cnt+3] = (uint8_t)cmd[cnt];//將接收數據的cmd內容，放進crcbuff計算CRC值
     
     if (MLX90614_CRC8(crcbuf, 6) == (uint8_t)0x00)
         return ((0.02*static_cast<float>((cmd[1]<<8)|cmd[0]))   //Kelvin
