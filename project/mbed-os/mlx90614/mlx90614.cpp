@@ -129,10 +129,10 @@ float getTempC_Obj1(uint8_t SAddr)
 {
     char cmd[3] = { 0 };         //cmd 接收和傳送用的buffer
     uint8_t crcbuf[6] = { 0 };   //crcbuff 計算CRC用
-    uint8_t writeAddr, readAddr; //MLX90614的位址
+    uint8_t writeAddr, readAddr; 
     
-    writeAddr = (SAddr << 1) + 0;//位址7bit + 讀入1bit
-    readAddr = (SAddr << 1) + 1; //位址7bit + 寫入1bit
+    writeAddr = (SAddr << 1) + 0;//位址7bit + 寫入1bit
+    readAddr = (SAddr << 1) + 1; //位址7bit + 讀取1bit
     
     crcbuf[0] = writeAddr;       //write Address 
     crcbuf[1] = cmd[0] = OPCODE_RAM | RAM_TOBJ1;//我要作的操作|我要的數據儲存的位址
